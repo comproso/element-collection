@@ -1,0 +1,25 @@
+{
+	"name": "comproso/element-collection",
+	"description": "collection of standard elements for the comproso framework",
+	"version":	"0.1.0.0002",
+	"type": "library",
+	"license": "AGPL-3.0",
+	"authors": [
+		{
+			"name": "Thiemo Kunze",
+			"email": "kunze@wangaz.com",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"email": "support@comproso.org"
+	},
+	"require": {
+		"comproso/testing": "~0.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"Comproso\\Elements\\Collection\\": "src/"
+		}
+	}
+}
