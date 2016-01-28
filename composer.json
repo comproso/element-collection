@@ -15,7 +15,7 @@
 		"email": "support@comproso.org"
 	},
 	"require": {
-		"comproso/testing": "~0.1"
+		"comproso/testing": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
