@@ -1,0 +1,1 @@
+<{{ $tag }} @if(isset($cssid)) {{ $cssid }} @endif class="{{ $type }} content element @if(isset($cssclass)) {{ $cssclass }} @endif">

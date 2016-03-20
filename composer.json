@@ -1,7 +1,7 @@
 {
 	"name": "comproso/element-collection",
 	"description": "collection of standard elements for the comproso framework",
-	"version":	"0.1.0.0002",
+	"version":	"0.1.0.0014",
 	"type": "library",
 	"license": "AGPL-3.0",
 	"authors": [
@@ -15,7 +15,8 @@
 		"email": "support@comproso.org"
 	},
 	"require": {
-		"comproso/testing": "~0.1"
+		"comproso/testing": "~0.1",
+		"comproso/exchange": "~0.1"
 	},
 	"autoload": {
 		"psr-4": {

@@ -4,6 +4,8 @@ namespace Comproso\Elements\Collection;
 
 use Illuminate\Support\ServiceProvider;
 
+use Validator;
+
 class ComprosoElementCollectionServiceProvider extends ServiceProvider
 {
     /**
@@ -25,6 +27,21 @@ class ComprosoElementCollectionServiceProvider extends ServiceProvider
 	    $this->publishes([
 	    	__DIR__.'/resources/views' => base_path('resources/views/vendor/comproso/element-collection')
 	    ], 'views');
+
+	    // extend validation rules
+	    Validator::extend('cetype', function($attribute, $value, $parameters, $validator) {
+            // define cetypes
+            $cetypes = ['text', 'input'/*, 'textarea'*/];
+
+            return in_array($value, $cetypes);
+        });
+
+        Validator::extend('input_type', function($attribute, $value, $parameters, $validator) {
+            // define cetypes
+            $formtypes = ['text', 'hidden', 'radio', 'submit', 'reset', 'checkbox', 'button', /*'password',*/ 'color', 'date', 'datetime', 'datetime-local', /*'email',*/ 'month', 'number', 'range', 'search', /*'tel',*/ 'time', /*'url',*/ 'week'];
+
+            return in_array($value, $formtypes);
+        });
     }
 
     /**
