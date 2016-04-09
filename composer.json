@@ -1,7 +1,7 @@
 {
 	"name": "comproso/element-collection",
 	"description": "collection of standard elements for the comproso framework",
-	"version":	"0.1.0.0014",
+	"version":	"0.1.0.0015",
 	"type": "library",
 	"license": "AGPL-3.0",
 	"authors": [
@@ -15,7 +15,8 @@
 		"email": "support@comproso.org"
 	},
 	"require": {
-		"comproso/framework": "~0.7"
+		"comproso/framework": "~0.7",
+		"wangaz/laravel-semantic-ui-css": "~0.3"
 	},
 	"autoload": {
 		"psr-4": {

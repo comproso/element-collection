@@ -28,10 +28,15 @@ class ComprosoElementCollectionServiceProvider extends ServiceProvider
 	    	__DIR__.'/resources/views' => base_path('resources/views/vendor/comproso/element-collection')
 	    ], 'views');
 
+	    // publish assets
+	    $this->publishes([
+	    	__DIR__.'/resources/assets' => public_path('vendor/comproso/element-collection')
+	    ], 'assets');
+
 	    // extend validation rules
 	    Validator::extend('cetype', function($attribute, $value, $parameters, $validator) {
             // define cetypes
-            $cetypes = ['text', 'input'/*, 'textarea'*/];
+            $cetypes = ['text', 'input'/*, 'textarea'*/, 'wrapper'];
 
             return in_array($value, $cetypes);
         });

@@ -1,1 +1,1 @@
-<{{ $tag }} @if(isset($cssid)) {{ $cssid }} @endif class="{{ $type }} content element @if(isset($cssclass)) {{ $cssclass }} @endif">
+<{{ $tag }}<?php if(isset($cssid)): ?> id="{{ $cssid }}"<?php endif; ?> class="content element wrapper<?php if(isset($cssclass)): ?> {{ $cssclass }}<?php endif; ?>">

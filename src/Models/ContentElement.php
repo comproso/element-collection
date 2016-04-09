@@ -3,9 +3,9 @@
 namespace Comproso\Elements\Collection\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
-use Cache;
+use Request;
+use Session;
 use Validator;
 use View;
 
@@ -19,8 +19,8 @@ class ContentElement extends Model implements ElementContract
     // explanation table
     protected $table = 'content_elements';
 
-    // mass assignable (whitelist)
-    protected $fillable = [];
+    // mass assignable (blacklist)
+    protected $guarded = [];
 
 	// Item model
     public function items()
@@ -32,7 +32,7 @@ class ContentElement extends Model implements ElementContract
 	public function implement($data)
 	{
 		// input validation
-		$validator = Validator::make($data->toArray(), [
+		/*$validator = Validator::make($data->toArray(), [
 			'position' => 'integer',
 			'headline' => 'string',
 			'label' => 'string',
@@ -41,8 +41,8 @@ class ContentElement extends Model implements ElementContract
 			'form_input_type' => "input_type|required_if:type,input",
 			'form_params' => 'json',
 			'form_options' => 'json',
-			'cssid' => 'alpha_dash',
-			'cssclass' => 'alpha_dash'
+			#'cssid' => 'alpha_dash',
+			#'cssclass' => 'alpha_dash'
 		]);
 
 		$validator->sometimes('form_name', 'alpha_dash|required', function ($input) {
@@ -58,7 +58,7 @@ class ContentElement extends Model implements ElementContract
 		{
 			\Log::error($validator->errors());
 			return false;
-		}
+		}*/
 
 		// set element type
 		$this->type = $data->type;
@@ -69,8 +69,6 @@ class ContentElement extends Model implements ElementContract
 		}
 		elseif($data->type == "input")
 		{
-			$this->form_name = $data->form_name;
-
 			// set form input type
 			$this->form_input_type = $data->form_input_type;
 
@@ -94,17 +92,6 @@ class ContentElement extends Model implements ElementContract
 			return false;
 		}
 
-		// set template
-		if(isset($data->template))
-			$this->template = $data->template;
-
-		// set css
-		if(isset($data->cssid))
-			$this->cssid = $data->cssid;
-
-		if(isset($data->cssclass))
-			$this->cssclass = $data->cssclass;
-
 		// successfully created
 		return true;
 	}
@@ -112,52 +99,27 @@ class ContentElement extends Model implements ElementContract
     // model generation
     public function generate($cache = null)
     {
-	    // prepare view
-	    $view = "";
+	    // prepare result
+	    $result = new ContentElement;
 
 		// get the type
 		if($this->type == "text")
-		{
-			if($this->template === null)
-				$this->template = "eco::text";
-
-			$view = View::make($this->template, [
-				'content'	=> $this->html,
-				'cssid'		=> $this->cssid,
-				'cssclass'	=> $this->cssclass
-			])->render();
-		}
+			$result->content = $this->html;
 		elseif($this->type == "input")
 		{
 			if(($this->form_input_type !== "radio") AND ($this->form_input_type !== "checkbox"))
 			{
-				if($this->template === null)
-					$this->template = "eco::input";
-
-				$view = View::make($this->template, [
-					'label'		=> $this->label,
-					'type'		=> $this->form_input_type,
-					'name'		=> $this->form_name,
-					'params'	=> json_decode($this->form_params, true),
-					'cssid'		=> $this->cssid,
-					'cssclass'	=> $this->cssclass,
-					'value'		=> $cache
-				])->render();
+				$result->label = $this->label;
+				$result->type = $this->form_input_type;
+				$result->params = (is_null($this->form_params)) ? [] : json_decode($this->form_params, true);
+				$result->value = $cache;
 			}
 			else
 			{
-				if($this->template === null)
-					$this->template = "eco::radiocheckbox";
-
-				$view = View::make($this->template, [
-					'label'		=> $this->label,
-					'type'		=> $this->form_input_type,
-					'name'		=> $this->form_name,
-					'options'	=> json_decode($this->form_options, true),
-					'cssid'		=> $this->cssid,
-					'cssclass'	=> $this->cssclass,
-					'value'		=> $cache
-				])->render();
+				$result->label = $this->label;
+				$result->type = $this->form_input_type;
+				$result->options = (is_null($this->form_options)) ? [] : json_decode($this->form_options, true);
+				$result->value = $cache;
 			}
 		}
 		elseif($this->type == "textarea")
@@ -166,36 +128,66 @@ class ContentElement extends Model implements ElementContract
 		}
 		elseif($this->type == "wrapper")
 		{
-			if($this->template === null)
-				$this->template = ($this->wrapper_type == 'begin') ? 'eco::wrappers.begin' : 'eco::wrappers.end';
-
-			$view = View::make($this->template, [
-				'tag' => $this->html_tag
-			])->render();
+			$result->tag = $this->html_tag;
 		}
 		else
 		{
 			// no valid type
-			return false;
+			return null;
 		}
 
-		return $view;
+		return $result;
     }
 
     // model proceeding
-    public function proceed($request)
+    public function proceed()
     {
 	    if($this->type === "text")
 	    	return null;
 
-	    $validator = Validator::make($request->toArray(), [$this->form_name => $this->form_validation]);
+		// get value
+		$value = Request::get('item'.$this->item_id);
 
+		// get validation rules
+		$validation = (isset($this->form_validation)) ? $this->form_validation : "alpha_dash";
+
+		// validate
+	    $validator = Validator::make(['val' => $value], ['val' => $validation]);
+
+		// abort if validation fails
 	    if($validator->fails())
 	    {
 	    	\Log::error('Validation of Item (CE-ID: '.$this->id.') input failed');
-			return false;
+			return null;
 		}
 
-	    return $request->input($this->form_name);
+	    return $value;
+    }
+
+    // model default template
+    public function template()
+    {
+	    switch($this->type)
+	    {
+		    case "text":
+		    	return "eco::text";
+
+		    	break;
+		    case "input":
+		    	if(($this->form_input_type == "radio") OR ($this->form_input_type == "checkbox"))
+		    		return "eco::radiocheckbox";
+		    	else
+		    		return "eco::input";
+
+		    	break;
+		    case "textarea":
+		    	break;
+		    case "wrapper":
+		    	if($this->wrapper_type == "begin")
+		    		return "eco::wrappers.begin";
+		    	else
+		    		return "eco::wrappers.end";
+		    	break;
+	    }
     }
 }

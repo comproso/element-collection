@@ -1,3 +1,3 @@
-<div @if(isset($cssid)) {{ $cssid }} @endif class="text content element @if(isset($cssclass)) {{ $cssclass }} @endif">
+<div @if(isset($cssid)) id="{{ $cssid }}" @endif class="text content element @if(isset($cssclass)) {{ $cssclass }} @endif ">
 	{!! trans($content) !!}
 </div>
