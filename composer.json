@@ -16,7 +16,7 @@
 	},
 	"require": {
 		"comproso/framework": "~0.7",
-		"wangaz/laravel-semantic-ui-css": "~0.3"
+		"wangaz/laravel-semantic-ui-css": "~1.0"
 	},
 	"autoload": {
 		"psr-4": {
