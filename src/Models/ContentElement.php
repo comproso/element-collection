@@ -63,6 +63,9 @@ class ContentElement extends Model implements ElementContract
 		// set element type
 		$this->type = $data->type;
 
+		// set attributes
+		$this->html_attributes = (isset($data->html_attributes)) ? $data->html_attributes : null;
+
 		if($this->type == "text")
 		{
 			$this->html = $data->html;
@@ -71,9 +74,6 @@ class ContentElement extends Model implements ElementContract
 		{
 			// set form input type
 			$this->form_input_type = $data->form_input_type;
-
-			if(isset($data->form_params))
-				$this->form_params = $data->form_params;
 
 			if(isset($data->form_options))
 				$this->form_options = $data->form_options;
@@ -101,6 +101,9 @@ class ContentElement extends Model implements ElementContract
     {
 	    // prepare result
 	    $result = new ContentElement;
+
+	    // set attributes
+	    $result->html_attributes = $this->html_attributes;
 
 		// get the type
 		if($this->type == "text")

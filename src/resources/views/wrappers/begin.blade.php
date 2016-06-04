@@ -1,1 +1,1 @@
-<{{ $tag }}<?php if(isset($cssid)): ?> id="{{ $cssid }}"<?php endif; ?> class="content element wrapper<?php if(isset($cssclass)): ?> {{ $cssclass }}<?php endif; ?>">
+<{{ $tag }}<?php if(isset($cssid)): ?> id="{{ $cssid }}"<?php endif; ?> class="content element wrapper<?php if(isset($cssclass)): ?> {{ $cssclass }}<?php endif; ?>"<?php if(isset($html_attributes)): foreach($html_attributes as $attr => $val): ?> {{ $attr }}='{{ $val }}'<?php endforeach; endif; ?>>
