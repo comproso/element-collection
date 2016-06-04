@@ -103,7 +103,7 @@ class ContentElement extends Model implements ElementContract
 	    $result = new ContentElement;
 
 	    // set attributes
-	    $result->html_attributes = $this->html_attributes;
+	    $result->html_attributes = (is_null($this->html_attributes)) ? [] : json_decode($this->html_attributes);
 
 		// get the type
 		if($this->type == "text")
