@@ -1,7 +1,7 @@
 {
 	"name": "comproso/element-collection",
 	"description": "collection of standard elements for the comproso framework",
-	"version":	"0.1.0.0021",
+	"version":	"0.1.0.0023",
 	"type": "library",
 	"license": "AGPL-3.0",
 	"authors": [
