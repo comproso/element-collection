@@ -143,19 +143,20 @@ class ContentElement extends Model implements ElementContract
     }
 
     // model proceeding
-    public function proceed()
+    public function proceed($cache = null)
     {
 	    if($this->type === "text")
 	    	return null;
 
-		// get value
-		$value = Request::get('item'.$this->item_id);
+		// if no value is set
+		if($cache === null)
+			return null;
 
 		// get validation rules
 		$validation = (isset($this->form_validation)) ? $this->form_validation : "alpha_dash";
 
 		// validate
-	    $validator = Validator::make(['val' => $value], ['val' => $validation]);
+	    $validator = Validator::make(['val' => $cache], ['val' => $validation]);
 
 		// abort if validation fails
 	    if($validator->fails())
@@ -164,7 +165,7 @@ class ContentElement extends Model implements ElementContract
 			return null;
 		}
 
-	    return $value;
+	    return $cache;
     }
 
     // model default template
